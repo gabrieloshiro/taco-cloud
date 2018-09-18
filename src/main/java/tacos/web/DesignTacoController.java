@@ -18,23 +18,38 @@ import tacos.Taco;
 @RequestMapping("/design")
 public class DesignTacoController {
 
+	final private List<Ingredient> ingredients = Arrays.asList(
+			new Ingredient("FLTO", "Flower Tortilla", Ingredient.Type.WRAP),
+			new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
+			new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
+			new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
+			new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
+			new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
+			new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
+			new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
+			new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
+			new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE));
+	
+	public List<Ingredient> getIngredients() {
+		return ingredients;
+	}
+
 	@GetMapping
 	public String showDesignForm(final Model model) {
-		final List<Ingredient> ingredients = Arrays.asList(
-				new Ingredient("FLTO", "Flower Tortilla", Ingredient.Type.WRAP),
-				new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-				new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-				new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-				new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-				new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-				new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-				new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-				new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-				new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE));
 
+		log.debug("GET /design");
+		
 		final Ingredient.Type[] types = Ingredient.Type.values();
 		for (final Ingredient.Type type : types) {
-			model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+			String ingredientsSetName = type.toString().toLowerCase();
+			log.debug("Adding " + ingredientsSetName + ":");
+			
+			List<Ingredient> ingredients = filterByType(getIngredients(), type);
+			for (Ingredient ingredient : ingredients) {
+				log.debug(ingredient.getId() + " " + ingredient.getName());
+			}
+				
+			model.addAttribute(ingredientsSetName, ingredients);
 		}
 
 		model.addAttribute("design", new Taco());
