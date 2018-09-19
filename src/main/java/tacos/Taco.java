@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class Taco {
 	
-	private List<Ingredient> ingredients;
+	private List<String> ingredients;
 
 	private String name;
 	
